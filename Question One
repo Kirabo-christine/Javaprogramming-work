@@ -1,0 +1,54 @@
+package my.work;
+
+import java.util.Scanner;
+
+public class SupermarketBilling {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		System.out.print("Enter number of items: ");
+		int n = sc.nextInt();
+		sc.nextLine(); // consume newline
+
+		String[] itemNames = new String[n];
+		double[] prices = new double[n];
+		int[] quantities = new int[n];
+		double[] subtotals = new double[n];
+
+		double total = 0;
+
+		// Input items using for loop
+		for (int i = 0; i < n; i++) {
+			System.out.print("Enter item name: ");
+			itemNames[i] = sc.nextLine();
+
+			System.out.print("Enter price per unit: ");
+			prices[i] = sc.nextDouble();
+
+			System.out.print("Enter quantity: ");
+			quantities[i] = sc.nextInt();
+			sc.nextLine(); // consume newline
+
+			subtotals[i] = prices[i] * quantities[i];
+			total += subtotals[i];
+		}
+
+		// Print receipt
+		System.out.println("\n===== RECEIPT =====");
+		for (int i = 0; i < n; i++) {
+			System.out.println(itemNames[i] + " - " + quantities[i] + " × " + prices[i] + " = " + subtotals[i]);
+		}
+
+		System.out.println("Grand Total: " + total);
+
+		double discount = 0;
+		if (total > 50000) {
+			discount = total * 0.05;
+			System.out.println("Discount (5%): " + discount);
+		}
+
+		double finalAmount = total - discount;
+		System.out.println("Final Amount Payable: " + finalAmount);
+	}
+}
+
