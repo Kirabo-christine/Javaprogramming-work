@@ -1,0 +1,91 @@
+package my.work;
+
+import java.util.Scanner;
+
+public class Classattendance {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		// Read total number of students (validated)
+		int totalStudents = 0;
+		while (true) {
+			System.out.print("Enter total number of students in the class: ");
+			String line = sc.nextLine().trim();
+			try {
+				totalStudents = Integer.parseInt(line);
+				if (totalStudents <= 0) {
+					System.out.println("Please enter a positive number.");
+					continue;
+				}
+				break;
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid number. Try again.");
+			}
+		}
+
+		int[] attendance = new int[30]; // store up to 30 days
+		int dayCount = 0;
+		String choice;
+
+		do {
+			// Read number present for this day (validated)
+			int present = -1;
+			while (true) {
+				System.out.print("Enter number of students present on Day " + (dayCount + 1) + ": ");
+				String s = sc.nextLine().trim();
+				try {
+					present = Integer.parseInt(s);
+					if (present < 0 || present > totalStudents) {
+						System.out.println("Enter a value between 0 and " + totalStudents + ".");
+						continue;
+					}
+					break;
+				} catch (NumberFormatException e) {
+					System.out.println("Invalid input. Enter an integer.");
+				}
+			}
+
+			attendance[dayCount++] = present;
+
+			if (dayCount >= 30) {
+				System.out.println("Reached the maximum of 30 days. Stopping entry.");
+				break;
+			}
+
+			// Ask whether to continue (validated yes/no)
+			while (true) {
+				System.out.print("Do you want to enter attendance for another day? (yes/no): ");
+				choice = sc.nextLine().trim();
+				if (choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no")) {
+					break;
+				} else {
+					System.out.println("Please type 'yes' or 'no'.");
+				}
+			}
+		} while (choice.equalsIgnoreCase("yes"));
+
+		// If no data entered
+		if (dayCount == 0) {
+			System.out.println("No attendance recorded.");
+			return;
+		}
+
+		// Summary
+		int sum = 0, lowDays = 0;
+		System.out.println("\n===== ATTENDANCE REPORT =====");
+		for (int i = 0; i < dayCount; i++) {
+			System.out.printf("Day %d → %d students present%n", i + 1, attendance[i]);
+			sum += attendance[i];
+			if (attendance[i] < totalStudents * 0.5) { // correct 50% check
+				lowDays++;
+			}
+		}
+
+		double average = sum / (double) dayCount;
+		double lowPercentage = (lowDays * 100.0) / dayCount;
+
+		System.out.printf("Average Attendance: %.2f%n", average);
+		System.out.println("Days with low attendance (<50%): " + lowDays);
+		System.out.printf("Percentage of low-attendance days: %.2f%%%n", lowPercentage);
+	}
+}
